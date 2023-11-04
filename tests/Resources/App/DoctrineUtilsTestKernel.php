@@ -1,0 +1,98 @@
+<?php
+declare(strict_types=1);
+
+namespace ControlBit\DoctrineUtils\Tests\Resources\App;
+
+use ControlBit\DoctrineUtils\Tests\Resources\App\Fixtures\AppFixtures;
+use ControlBit\DoctrineUtils\DoctrineUtils;
+use DAMA\DoctrineTestBundle\DAMADoctrineTestBundle;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
+use Psr\Log\NullLogger;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpKernel\Kernel;
+
+class DoctrineUtilsTestKernel extends Kernel
+{
+    use MicroKernelTrait;
+
+    public function registerBundles(): iterable
+    {
+        return [
+            new FrameworkBundle(),
+            new DoctrineBundle(),
+            new DoctrineFixturesBundle(),
+            new DAMADoctrineTestBundle(),
+            new DoctrineUtils(),
+        ];
+    }
+
+    /**
+     * @phpstan-ignore-next-line
+     */
+    private function configureContainer(
+        ContainerConfigurator $container,
+        LoaderInterface       $loader,
+        ContainerBuilder      $builder,
+    ): void {
+
+        $container->extension(
+            'framework',
+            [
+                'test'                  => true,
+                'http_method_override'  => false,
+                'handle_all_throwables' => true,
+                'php_errors'            => [
+                    'log' => true,
+                ],
+                'validation'            => [
+                    'email_validation_mode' => 'html5',
+                ],
+                'uid'                   => [
+                    'time_based_uuid_version' => 7,
+                    'default_uuid_version'    => 7,
+                ],
+            ]
+        );
+
+        $container->extension('doctrine', [
+            'dbal' => [
+                'driver'         => 'pdo_mysql',
+                'url'            => 'mysql://db:db@database/db',
+                'use_savepoints' => true,
+            ],
+            'orm'  => [
+                'report_fields_where_declared' => true,
+                'auto_generate_proxy_classes'  => true,
+                'naming_strategy'              => 'doctrine.orm.naming_strategy.underscore_number_aware',
+                'auto_mapping'                 => true,
+                'enable_lazy_ghost_objects'    => true,
+                'mappings'                     => [
+                    'Tests' => [
+                        'is_bundle' => false,
+                        'type'      => 'attribute',
+                        'dir'       => __DIR__.'/Entity',
+                        'prefix'    => 'ControlBit\DoctrineUtils\Tests\Resources\App',
+                    ],
+                ],
+            ],
+        ]);
+
+        $container->services()->set('logger', NullLogger::class);
+
+        $this->configureServices($container);
+    }
+
+    private function configureServices(ContainerConfigurator $container): void
+    {
+        $container
+            ->services()
+            ->set(AppFixtures::class)
+            ->tag('doctrine.fixture.orm')
+        ;
+    }
+}
