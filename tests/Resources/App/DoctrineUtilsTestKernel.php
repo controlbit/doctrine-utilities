@@ -62,7 +62,7 @@ class DoctrineUtilsTestKernel extends Kernel
         $container->extension('doctrine', [
             'dbal' => [
                 'driver'         => 'pdo_mysql',
-                'url'            => 'mysql://db:db@database/db',
+                'url'            => 'mysql://db:db@du-database/db',
                 'use_savepoints' => true,
             ],
             'orm'  => [

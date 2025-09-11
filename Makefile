@@ -1,7 +1,7 @@
 .PHONY: setup up down attach test check code-check clear
 
 # USER VARIABLES / PROJECT VARIABLES
-PHP_CONTAINER_NAME = php
+PHP_CONTAINER_NAME = du-php
 
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_UP =  ${DOCKER_COMPOSE} up -d --force-recreate --remove-orphans

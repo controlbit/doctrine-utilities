@@ -1,7 +1,7 @@
 services:
-  php:
-    container_name: php
-    hostname: php
+  du-php:
+    container_name: du-php
+    hostname: du-php
     build:
       context: ./docker/php
       target: development
@@ -12,8 +12,9 @@ services:
       PHP_IDE_CONFIG: "serverName=php"
     tty: true
 
-  database:
-    hostname: database
+  du-database:
+    container_name: du-database
+    hostname: du-database
     image: mysql/mysql-server:latest
     tty: true
     ports:
