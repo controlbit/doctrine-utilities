@@ -30,6 +30,7 @@ final class Extension extends SymfonyExtension
         );
 
         $loader->load('factory.xml');
+        $loader->load('event.xml');
         $loader->load('generator.xml');
     }
 }
