@@ -9,6 +9,7 @@ use ControlBit\DoctrineUtils\Tests\Resources\App\Entity\WithTypeEntity;
 use ControlBit\DoctrineUtils\Types\EntityType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class EntityTypeTest extends KernelTestCase
 {
@@ -29,9 +30,7 @@ final class EntityTypeTest extends KernelTestCase
         self::assertEquals('entity', (new EntityType())->getName());
     }
 
-    /**
-     * @dataProvider convertToPHPValueDataProvider
-     */
+    #[DataProvider('convertToPHPValueDataProvider')]
     public function testConvertToPHPValue(string $value): void
     {
         $platform = $this->createMock(AbstractPlatform::class);
@@ -44,7 +43,7 @@ final class EntityTypeTest extends KernelTestCase
     /**
      * @return array<array{string}>
      */
-    public function convertToPHPValueDataProvider(): array
+    public static function convertToPHPValueDataProvider(): array
     {
         return [
             ['foo'],

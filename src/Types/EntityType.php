@@ -3,30 +3,20 @@ declare(strict_types=1);
 
 namespace ControlBit\DoctrineUtils\Types;
 
+use ControlBit\DoctrineUtils\Contract\ContainerAwareDoctrineTypeInterface;
 use ControlBit\DoctrineUtils\Exception\RuntimeException;
+use ControlBit\DoctrineUtils\Traits\ContainerAwareDoctrineTypeTrait;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-final class EntityType extends Type
+final class EntityType extends Type implements ContainerAwareDoctrineTypeInterface
 {
+    use ContainerAwareDoctrineTypeTrait;
+
     public const  NAME      = 'entity';
     private const SEPARATOR = '::';
-    private ContainerInterface $container;
-
-    public function setContainer(ContainerInterface $container): self
-    {
-        $this->container = $container;
-
-        return $this;
-    }
-
-    public function getName()
-    {
-        return self::NAME;
-    }
 
     /**
      * @codeCoverageIgnore

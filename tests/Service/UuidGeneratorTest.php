@@ -7,6 +7,7 @@ use ControlBit\DoctrineUtils\Service\UuidGenerator;
 use ControlBit\DoctrineUtils\Tests\KernelTestCase;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 
 class UuidGeneratorTest extends KernelTestCase
@@ -21,9 +22,7 @@ class UuidGeneratorTest extends KernelTestCase
         $this->generator = self::getContainer()->get('doctrine.uuid_generator');
     }
 
-    /**
-     * @dataProvider generateIdDataProvider
-     */
+    #[DataProvider('generateIdDataProvider')]
     public function testGenerateIdWhenReflectionPropertyEntityValueIsNull(
         ?object              $entity,
         string|Uuid|null     $reflectionPropertyValue,
@@ -57,7 +56,7 @@ class UuidGeneratorTest extends KernelTestCase
     /**
      * @return iterable<string, array{object|null, string|null, bool|\Throwable}
      */
-    public function generateIdDataProvider(): iterable
+    public static function generateIdDataProvider(): iterable
     {
         yield 'Entity is null' => [
             null,

@@ -23,6 +23,7 @@ RUN docker-php-ext-install ctype
 RUN docker-php-ext-install xml
 RUN docker-php-ext-install zip
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install intl
 RUN php-ext-enable pdo_mysql
 
 # Install composer
